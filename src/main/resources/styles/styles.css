@@ -1,0 +1,52 @@
+/* Application wide styles */
+#ddPane {
+    -fx-border-color: #8d9497;
+    -fx-border-radius: 15px;
+    -fx-border-width: 5px;
+    -fx-border-style: dashed;
+}
+
+#findFileBtn {
+    -fx-font-size:17px;
+    -fx-background-color:WHITE;
+}
+
+#findFileBtn:hover {
+    -fx-background-color: #efefef;
+}
+
+#startEncodingBtn {
+     -fx-font-size:17px;
+     -fx-background-color:WHITE;
+ }
+
+#startEncodingBtn:hover {
+    -fx-background-color: #efefef;
+}
+
+.jfx-combo-box {
+    -fx-font-size: 20px;
+    -fx-font-family: "Open Sans Regular";
+    -fx-text-fill: rgba(75, 75, 75, 0.69);
+}
+
+.jfx-combo-box .input-line{
+    -fx-pref-height: 0px;
+}
+.jfx-combo-box .input-focused-line{
+    -fx-pref-height: 0px;
+}
+
+#editPathBtn:hover {
+    -fx-fill: rgba(17, 17, 17, 0.69);
+}
+
+#editFileNameBtn:hover {
+    -fx-fill: rgba(17, 17, 17, 0.69);
+}
+
+#compressionSettingsBtn:hover {
+    -fx-fill: rgba(17, 17, 17, 0.69);
+}
+
+
