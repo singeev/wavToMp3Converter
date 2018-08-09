@@ -3,9 +3,10 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -14,9 +15,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="666.0" prefWidth="992.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.singeev.controller.DragAndDropController">
+<AnchorPane id="progressBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="666.0" prefWidth="992.0" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.singeev.controller.Controller">
    <children>
-      <Pane id="ddPane" layoutX="585.0" layoutY="37.0" onDragDropped="#handleDrop" onDragExited="#handleDragExit" onDragOver="#handleDrugAndDrop" prefHeight="226.0" prefWidth="357.0">
+      <Pane fx:id="ddPane" layoutX="585.0" layoutY="37.0" onDragDropped="#handleDrop" onDragExited="#handleDragExit" onDragOver="#handleDrugAndDrop" prefHeight="226.0" prefWidth="357.0">
          <children>
             <Label fx:id="ddLabel" layoutX="40.0" layoutY="14.0" prefHeight="99.0" prefWidth="277.0" text="Перетащите ваш файл сюда" textAlignment="CENTER" textFill="#00000082" wrapText="true">
                <font>
@@ -101,7 +102,7 @@
             <Font name="Open Sans Regular" size="26.0" />
          </font>
       </Label>
-      <GridPane layoutX="63.0" layoutY="365.0" prefHeight="132.0" prefWidth="861.0">
+      <GridPane fx:id="settingsPane" layoutX="63.0" layoutY="365.0" prefHeight="132.0" prefWidth="861.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="218.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="497.0" />
@@ -136,11 +137,6 @@
                </font>
             </Label>
             <Label fx:id="destinationPathLabel" layoutX="10.0" layoutY="12.0" text="-" textFill="#000000b0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Open Sans SemiBold" size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="newFileNameLabel" layoutX="245.0" layoutY="12.0" text="-" textFill="#000000b0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font name="Open Sans SemiBold" size="20.0" />
                </font>
@@ -263,26 +259,47 @@
                </children>
             </GridPane>
             <FontAwesomeIconView fx:id="editPathBtn" fill="#00000076" glyphName="PENCIL_SQUARE_ALT" onMouseReleased="#handleDirectoryChoose" size="30" textAlignment="CENTER" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <FontAwesomeIconView fx:id="editFileNameBtn" fill="#00000076" glyphName="PENCIL_SQUARE_ALT" layoutX="757.0" layoutY="37.0" size="30" textAlignment="CENTER" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <FontAwesomeIconView fx:id="fileNameEditBtn" fill="#00000076" glyphName="PENCIL_SQUARE_ALT" layoutX="757.0" layoutY="37.0" onMouseReleased="#handleFileNameEdit" size="30" textAlignment="CENTER" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <FontAwesomeIconView fx:id="compressionSettingsBtn" fill="#00000074" glyphName="PENCIL_SQUARE_ALT" layoutX="757.0" layoutY="70.0" onMouseReleased="#handleCompressSettingsBtn" size="30" textAlignment="CENTER" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <FontAwesomeIconView fx:id="finishEditBtn" fill="#1b8f2183" glyphName="CHECK_SQUARE_ALT" layoutX="757.0" layoutY="103.0" onMouseReleased="#handleFinishSettingsBtn" size="30" textAlignment="CENTER" visible="false" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <JFXTextField fx:id="newFileNameField" prefHeight="31.0" prefWidth="245.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Open Sans SemiBold" size="20.0" />
+               </font></JFXTextField>
+            <FontAwesomeIconView fx:id="finishEditFilenameBtn" fill="#1b8f2182" glyphName="CHECK_SQUARE_ALT" layoutX="757.0" layoutY="103.0" onMouseReleased="#handleFinishFileNameEditBtn" size="30" textAlignment="CENTER" visible="false" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
-      <ProgressBar layoutX="290.0" layoutY="579.0" prefHeight="23.0" prefWidth="563.0" progress="0.43" />
-      <Label id="ddLabel" layoutX="867.0" layoutY="572.0" prefHeight="37.0" prefWidth="69.0" text="43%" textAlignment="RIGHT" textFill="#00000082">
+      <Label fx:id="processPercendLabel" layoutX="855.0" layoutY="572.0" prefHeight="37.0" prefWidth="69.0" text="0%" textAlignment="RIGHT" textFill="#00000082" visible="false">
          <font>
             <Font name="Open Sans Regular" size="25.0" />
          </font>
       </Label>
-      <JFXButton fx:id="startEncodingBtn" buttonType="RAISED" layoutX="96.0" layoutY="569.0" prefHeight="44.0" prefWidth="141.0" ripplerFill="#4a4a4a5c" text="НАЧАТЬ" textFill="#000000ad">
+      <JFXButton fx:id="startEncodingBtn" buttonType="RAISED" layoutX="96.0" layoutY="569.0" onMouseReleased="#handleStartConvertation" prefHeight="44.0" prefWidth="141.0" ripplerFill="#4a4a4a5c" text="НАЧАТЬ" textFill="#000000ad">
           <font>
               <Font name="Open Sans SemiBold" size="16.0" />
           </font>
       </JFXButton>
-      <JFXCheckBox checkedColor="#cf2727af" layoutX="130.0" layoutY="511.0" prefHeight="29.0" prefWidth="401.0" text="удалить исходный файл" textFill="#000000b0">
+      <JFXCheckBox fx:id="deleteSourceCheckBox" checkedColor="#cf2727af" layoutX="130.0" layoutY="511.0" onAction="#handleDeleteSourceCheckBox" prefHeight="29.0" prefWidth="401.0" text="удалить исходный файл" textFill="#000000b0">
          <font>
             <Font name="Open Sans Regular" size="20.0" />
          </font>
       </JFXCheckBox>
+      <JFXProgressBar fx:id="progressBar" layoutX="268.0" layoutY="589.0" prefHeight="3.0" prefWidth="555.0" />
+      <Label fx:id="successLabel" layoutX="270.0" layoutY="619.0" prefHeight="29.0" prefWidth="638.0" text="   Все прошло успешно! Ваш файл сконвертирован." textFill="#048708d0" visible="false">
+         <font>
+            <Font name="Open Sans SemiBold" size="20.0" />
+         </font>
+         <graphic>
+            <FontAwesomeIconView fill="#048708b2" glyphName="CHECK" size="20" />
+         </graphic>
+      </Label>
+      <Label fx:id="errorLabel" layoutX="270.0" layoutY="619.0" prefHeight="29.0" prefWidth="718.0" text="  Не получилось! Исходный файл с ошибками, попробуйте другой!" textFill="#ba1506c4" visible="false">
+         <font>
+            <Font name="Open Sans SemiBold" size="20.0" />
+         </font>
+         <graphic>
+            <FontAwesomeIconView fill="#ba1506b2" glyphName="EXCLAMATION_TRIANGLE" size="20" />
+         </graphic>
+      </Label>
    </children>
 </AnchorPane>

@@ -1,20 +1,24 @@
 package com.singeev.controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.*;
 import com.singeev.Constants;
 import com.singeev.MainApp;
 import com.singeev.service.ConvertService;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +27,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DragAndDropController implements Initializable {
+public class Controller implements Initializable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DragAndDropController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
 
     @FXML
     private Label ddLabel;
@@ -37,6 +41,9 @@ public class DragAndDropController implements Initializable {
     private JFXButton findFileBtn;
 
     @FXML
+    private JFXButton startEncodingBtn;
+
+    @FXML
     private FontAwesomeIconView compressionSettingsBtn;
 
     @FXML
@@ -44,6 +51,12 @@ public class DragAndDropController implements Initializable {
 
     @FXML
     private FontAwesomeIconView ddIcon;
+
+    @FXML
+    private FontAwesomeIconView fileNameEditBtn;
+
+    @FXML
+    private FontAwesomeIconView finishEditFilenameBtn;
 
     @FXML
     private Label sourceFileNameLabel;
@@ -61,7 +74,7 @@ public class DragAndDropController implements Initializable {
     private Label destinationPathLabel;
 
     @FXML
-    private Label newFileNameLabel;
+    private JFXTextField newFileNameField;
 
     @FXML
     private Label estimatedSizeLabel;
@@ -74,6 +87,27 @@ public class DragAndDropController implements Initializable {
 
     @FXML
     private JFXComboBox<String> frequencyComboBox;
+
+    @FXML
+    private GridPane settingsPane;
+
+    @FXML
+    private Pane ddPane;
+
+    @FXML
+    private Label processPercendLabel;
+
+    @FXML
+    private JFXCheckBox deleteSourceCheckBox;
+
+    @FXML
+    private JFXProgressBar progressBar;
+
+    @FXML
+    private Label successLabel;
+
+    @FXML
+    private Label errorLabel;
 
     private ConvertService service = new ConvertService();
 
@@ -89,16 +123,29 @@ public class DragAndDropController implements Initializable {
         frequencyComboBox.setItems(Constants.SAMPLING_FREQUENCY);
         frequencyComboBox.getSelectionModel().select("44100 herz");
         frequencyComboBox.setDisable(true);
+
+        newFileNameField.setText("-");
+        newFileNameField.setDisable(true);
+
+        progressBar.setProgress(0);
+        progressBar.setDisable(true);
     }
 
     @FXML
     private void handleDrugAndDrop(DragEvent event) {
         if (event.getDragboard().hasFiles()) {
-            event.acceptTransferModes(TransferMode.ANY);
-            ddLabel.setVisible(false);
-            orLabel.setVisible(false);
-            findFileBtn.setVisible(false);
-            ddIcon.setVisible(true);
+            List<File> files = event.getDragboard().getFiles();
+            final File source = files.get(0);
+            if (source.getName().endsWith("wav")) {
+                event.acceptTransferModes(TransferMode.ANY);
+                ddLabel.setVisible(false);
+                orLabel.setVisible(false);
+                findFileBtn.setVisible(false);
+                ddIcon.setVisible(true);
+            } else {
+                errorLabel.setText("   Поддерживаются только файлы в формате *.wav");
+                errorLabel.setVisible(true);
+            }
         }
     }
 
@@ -110,6 +157,9 @@ public class DragAndDropController implements Initializable {
             orLabel.setVisible(true);
             findFileBtn.setVisible(true);
             ddIcon.setVisible(false);
+        }
+        if(errorLabel.isVisible()) {
+            errorLabel.setVisible(false);
         }
     }
 
@@ -125,9 +175,10 @@ public class DragAndDropController implements Initializable {
                     sourceFileDate,
                     sourceFileSizeLabel,
                     destinationPathLabel,
-                    newFileNameLabel,
+                    newFileNameField,
                     estimatedSizeLabel);
         }
+        resetProgressUiElements();
     }
 
     @FXML
@@ -146,8 +197,19 @@ public class DragAndDropController implements Initializable {
                     sourceFileDate,
                     sourceFileSizeLabel,
                     destinationPathLabel,
-                    newFileNameLabel,
+                    newFileNameField,
                     estimatedSizeLabel);
+        }
+        resetProgressUiElements();
+    }
+
+    private void resetProgressUiElements() {
+        if (processPercendLabel.getText().equals("100%")) {
+            progressBar.setProgress(0);
+            progressBar.setDisable(true);
+            processPercendLabel.setText("0%");
+            processPercendLabel.setVisible(false);
+            successLabel.setVisible(false);
         }
     }
 
@@ -197,12 +259,82 @@ public class DragAndDropController implements Initializable {
     @FXML
     private void handleDirectoryChoose() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        if (service.getSourcePath() != null) {
+        if (service.getDestinationPath() != null) {
+            directoryChooser.setInitialDirectory(new File(service.getDestinationPath()));
+        } else if (service.getSourcePath() != null) {
             directoryChooser.setInitialDirectory(new File(service.getSourcePath()));
         }
-        File path = directoryChooser.showDialog(MainApp.getMainStage());
-        destinationPathLabel.setText(path.getAbsolutePath());
+        String path = directoryChooser.showDialog(MainApp.getMainStage()).getAbsolutePath();
+        service.setDestinationPath(path);
+        destinationPathLabel.setText(path);
     }
 
+    @FXML
+    private void handleFileNameEdit() {
+        newFileNameField.setDisable(false);
+        newFileNameField.requestFocus();
+        fileNameEditBtn.setVisible(false);
+        finishEditFilenameBtn.setVisible(true);
+    }
 
+    @FXML
+    private void handleFinishFileNameEditBtn() {
+        String finalNewFileName;
+        String newFileName = newFileNameField.getText().trim();
+        if (StringUtils.containsAny(newFileName, Constants.RESTRICTED_FILENAME_SYMBOLS)) {
+            if(successLabel.isVisible()) {
+                successLabel.setVisible(false);
+            }
+            errorLabel.setText("  Имя файла не должно содержать символы: " + Constants.RESTRICTED_FILENAME_SYMBOLS);
+            errorLabel.setVisible(true);
+            startEncodingBtn.setDisable(true);
+        } else {
+            finalNewFileName = newFileName.endsWith(".mp3") ? newFileName : newFileName + ".mp3";
+            service.setNewFileName(finalNewFileName);
+            newFileNameField.setText(finalNewFileName);
+            newFileNameField.setDisable(true);
+            finishEditFilenameBtn.setVisible(false);
+            fileNameEditBtn.setVisible(true);
+            if(errorLabel.isVisible()) {
+                errorLabel.setVisible(false);
+                startEncodingBtn.setDisable(false);
+            }
+        }
+    }
+
+    @FXML
+    private void handleDeleteSourceCheckBox(ActionEvent event) {
+        boolean selected = ((JFXCheckBox) event.getSource()).isSelected();
+        service.setDeleteSourceFile(selected);
+    }
+
+    @FXML
+    private void handleStartConvertation() {
+        settingsPane.setDisable(true);
+        ddPane.setDisable(true);
+        deleteSourceCheckBox.setDisable(true);
+        startEncodingBtn.setDisable(true);
+        progressBar.setProgress(0);
+        progressBar.setDisable(false);
+        processPercendLabel.setVisible(true);
+        EventHandler<WorkerStateEvent> onSuccessHandler = event -> {
+            settingsPane.setDisable(false);
+            ddPane.setDisable(false);
+            deleteSourceCheckBox.setDisable(false);
+            startEncodingBtn.setDisable(false);
+            service.deleteSourceFileIfNeeded();
+            successLabel.setVisible(true);
+        };
+
+        EventHandler<WorkerStateEvent> onFailHandler = event -> {
+            settingsPane.setDisable(false);
+            ddPane.setDisable(false);
+            deleteSourceCheckBox.setDisable(false);
+            startEncodingBtn.setDisable(false);
+            service.deleteSourceFileIfNeeded();
+            successLabel.setVisible(true);
+            errorLabel.setText("  Не получилось! Исходный файл с ошибками, попробуйте другой!");
+        };
+        service.encodeFile(progressBar, processPercendLabel, onSuccessHandler, onFailHandler);
+    }
 }

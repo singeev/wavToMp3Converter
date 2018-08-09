@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,9 @@ public class MainApp extends Application {
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("/styles/styles.css");
 
-        stage.setTitle("Hello JavaFX and Maven");
+        stage.setTitle("WavToMp3");
+        stage.setResizable(false);
+//        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
     }

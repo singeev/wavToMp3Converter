@@ -1,5 +1,11 @@
 package com.singeev.service;
 
+import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXTextField;
+import com.singeev.Constants;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import ws.schild.jave.*;
 
@@ -19,34 +25,36 @@ public class ConvertService {
     private long sourceFileDuration;
     private String sourcePath;
     private String destinationPath;
+    private String newFileName;
+    private boolean deleteSourceFile = false;
 
-    public void convert(String[] args) {
-        File source = new File("ts3_recording_18_07_18_20_0_53.wav");
-        File target = new File("target.mp3");
+    public void encodeFile(
+            JFXProgressBar progressBar,
+            Label processPercendLabel,
+            EventHandler<WorkerStateEvent> onSuccessHandler,
+            EventHandler<WorkerStateEvent> onFailHandler) {
+
+        File target = new File(destinationPath + "\\" + newFileName);
         AudioAttributes audio = new AudioAttributes();
-        audio.setCodec("libmp3lame");
+        audio.setCodec(Constants.MP3_CODEC);
         audio.setBitRate(bitRate);
         audio.setChannels(channels);
         audio.setSamplingRate(samplingRate);
         EncodingAttributes attrs = new EncodingAttributes();
         attrs.setFormat("mp3");
         attrs.setAudioAttributes(audio);
+        ProgressListener listener = new ProgressListener(progressBar, processPercendLabel);
 
-        ws.schild.jave.Encoder encoder = new ws.schild.jave.Encoder();
+        Task encoder = new EncoderTask(
+                new MultimediaObject(sourceFile),
+                target,
+                attrs,
+                listener);
 
-        try {
-            MultimediaInfo mi = new MultimediaObject(source).getInfo();
-            long ls = mi.getDuration();
-            System.out.println("File duration: " + convertLength(ls));
-            System.out.println("Estimated file size: " + estimateFileSizeWithBitrate(ls, bitRate));
-            ProgressListener listener = new ProgressListener();
-            encoder.encode(new MultimediaObject(source), target, attrs, listener);
-        } catch (EncoderException e) {
-            System.out.print("Some exception here: ");
-            e.printStackTrace();
-        }
+        encoder.setOnSucceeded(onSuccessHandler);
+        encoder.setOnFailed(onFailHandler);
 
-        System.out.println("Finished!");
+        new Thread(encoder).start();
     }
 
     private String estimateFileSizeWithBitrate(long duration, int bitRate) {
@@ -72,16 +80,17 @@ public class ConvertService {
 
     private Date getFileCreationDate(File source) {
         String fileName = source.getName();
-        if(fileName.startsWith("ts3_recording")) {
+        if (fileName.startsWith("ts3_recording")) {
             String dateString = fileName.substring(14, fileName.length() - 4);
             try {
                 return new SimpleDateFormat("y_MM_dd_HH_m_ss").parse(dateString);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        } else {
+            return new Date(source.lastModified());
         }
         return null;
-        //TODO: get file date if not TS file
     }
 
     private String getFilePath(File source) {
@@ -96,7 +105,7 @@ public class ConvertService {
 
     public void getSourceFileInfoAndShowIt(File source, Label sourceFileNameLabel, Label sourceFileLengthLabel,
                                            Label sourceFileDate, Label sourceFileSizeLabel, Label destinationPathLabel,
-                                           Label newFileNameLabel, Label estimatedSizeLabel) {
+                                           JFXTextField newFileNameField, Label estimatedSizeLabel) {
         sourceFile = source;
 
         try {
@@ -107,14 +116,21 @@ public class ConvertService {
             sourceFileLengthLabel.setText(convertLength(sourceFileDuration));
             sourceFileDate.setText(new SimpleDateFormat("dd.MM.yyyy в HH:mm").format(fileCreationDate));
             sourceFileSizeLabel.setText(convertFileSize(source.length()));
-            if(destinationPath == null) {
+            if (destinationPath == null) {
                 destinationPath = getFilePath(source);
             }
             destinationPathLabel.setText(destinationPath);
-            newFileNameLabel.setText(new SimpleDateFormat("yyyy.MM.dd_HH:mm").format(fileCreationDate) + ".mp3");
+            newFileName = new SimpleDateFormat("yyyy.MM.dd_HH-mm").format(fileCreationDate) + ".mp3";
+            newFileNameField.setText(newFileName);
             estimatedSizeLabel.setText(estimateFileSizeWithBitrate(sourceFileDuration, bitRate));
         } catch (EncoderException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void deleteSourceFileIfNeeded() {
+        if (deleteSourceFile) {
+            sourceFile.delete();
         }
     }
 
@@ -172,5 +188,21 @@ public class ConvertService {
 
     public void setDestinationPath(String destinationPath) {
         this.destinationPath = destinationPath;
+    }
+
+    public String getNewFileName() {
+        return newFileName;
+    }
+
+    public void setNewFileName(String newFileName) {
+        this.newFileName = newFileName;
+    }
+
+    public boolean isDeleteSourceFile() {
+        return deleteSourceFile;
+    }
+
+    public void setDeleteSourceFile(boolean deleteSourceFile) {
+        this.deleteSourceFile = deleteSourceFile;
     }
 }

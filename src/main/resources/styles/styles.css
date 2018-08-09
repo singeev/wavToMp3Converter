@@ -37,16 +37,35 @@
     -fx-pref-height: 0px;
 }
 
+.jfx-text-field .input-line {
+    -fx-pref-height: 0px;
+}
+.jfx-text-field .input-focused-line{
+    -fx-pref-height: 0px;
+}
+
 #editPathBtn:hover {
     -fx-fill: rgba(17, 17, 17, 0.69);
 }
 
-#editFileNameBtn:hover {
+#fileNameEditBtn:hover {
     -fx-fill: rgba(17, 17, 17, 0.69);
+}
+
+#finishEditBtn:hover {
+    -fx-fill: #18851d;
+}
+
+#finishEditFilenameBtn:hover {
+    -fx-fill: #18851d;
 }
 
 #compressionSettingsBtn:hover {
     -fx-fill: rgba(17, 17, 17, 0.69);
+}
+
+#newFileNameField {
+    -fx-text-fill: #000000b0;
 }
 
 

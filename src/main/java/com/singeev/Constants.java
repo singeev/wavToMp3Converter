@@ -37,4 +37,8 @@ public class Constants {
     public static final ObservableList<String> CHANEL_MODE = FXCollections.observableArrayList(
             "mono",
             "stereo");
+
+    public static final String RESTRICTED_FILENAME_SYMBOLS = "\\/:*\"<>|,";
+    public static final String MP3_CODEC = "libmp3lame";
+
 }
