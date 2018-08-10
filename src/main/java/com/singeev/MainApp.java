@@ -3,9 +3,9 @@ package com.singeev;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +35,7 @@ public class MainApp extends Application {
 
         stage.setTitle("WavToMp3");
         stage.setResizable(false);
+        stage.getIcons().add(new Image("file:converterIco.png"));
 //        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();

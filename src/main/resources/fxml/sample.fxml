@@ -24,17 +24,17 @@
                   <Font name="Open Sans Regular" size="32.0" />
                </font>
             </Label>
-            <JFXButton fx:id="findFileBtn" buttonType="RAISED" layoutX="108.0" layoutY="148.0" onMouseReleased="#handleChooseFile" prefHeight="44.0" prefWidth="141.0" ripplerFill="#47474758" text="Выбрать файл" textFill="#000000ad">
-               <font>
-                  <Font name="Open Sans SemiBold" size="16.0" />
-               </font>
-            </JFXButton>
             <Label fx:id="orLabel" layoutX="158.0" layoutY="107.0" text="или" textFill="#0000005d">
                <font>
                   <Font name="Open Sans SemiBold" size="21.0" />
                </font>
             </Label>
             <FontAwesomeIconView fx:id="ddIcon" fill="#1680406b" glyphName="FILES_ALT" layoutX="119.0" layoutY="154.0" size="120" visible="false" />
+            <JFXButton fx:id="findFileBtn" buttonType="RAISED" layoutX="108.0" layoutY="148.0" onMouseReleased="#handleChooseFile" prefHeight="44.0" prefWidth="141.0" ripplerFill="#ffffff5c" text="Выбрать файл" textFill="#000000ad">
+             <font>
+                  <Font name="Open Sans SemiBold" />
+               </font>
+            </JFXButton>
          </children>
       </Pane>
       <Separator layoutX="17.0" layoutY="299.0" prefHeight="0.0" prefWidth="946.0" />
@@ -156,106 +156,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                   <JFXComboBox fx:id="bitrateComboBox" onAction="#handleBitrate" prefHeight="43.0" prefWidth="163.0">
-                       <!--<items>-->
-                           <!--<FXCollections fx:factory="observableArrayList">-->
-                               <!--<Label text="8 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="16 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="24 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="32 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="40 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="48 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="56 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="64 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="80 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="96 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="112 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="128 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="160 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="192 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="224 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="256 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                               <!--<Label text="320 kbps" textFill="#000000b0">-->
-                                   <!--<font>-->
-                                       <!--<Font name="Open Sans Regular" size="20.0" />-->
-                                   <!--</font>-->
-                               <!--</Label>-->
-                           <!--</FXCollections>-->
-                       <!--</items>-->
-                       <!--<value>-->
-                           <!--<Label text="64 kbps" textFill="#000000b0">-->
-                               <!--<font>-->
-                                   <!--<Font name="Open Sans Regular" size="20.0" />-->
-                               <!--</font>-->
-                           <!--</Label>-->
-                       <!--</value>-->
-                   </JFXComboBox>
-                  <JFXComboBox fx:id="chanelsComboBox" layoutX="10.0" layoutY="5.0" onAction="#handleChanels" prefHeight="43.0" prefWidth="149.0" GridPane.columnIndex="1" />
-                  <JFXComboBox fx:id="frequencyComboBox" layoutX="178.0" layoutY="5.0" onAction="#handleFrequency" prefHeight="43.0" prefWidth="188.0" GridPane.columnIndex="2" />
+                   <JFXComboBox fx:id="bitrateComboBox" onAction="#handleBitrate" prefHeight="43.0" prefWidth="163.0" />
+                   <JFXComboBox fx:id="chanelsComboBox" layoutX="10.0" layoutY="5.0" onAction="#handleChanels" prefHeight="43.0" prefWidth="149.0" GridPane.columnIndex="1" />
+                   <JFXComboBox fx:id="frequencyComboBox" layoutX="178.0" layoutY="5.0" onAction="#handleFrequency" prefHeight="43.0" prefWidth="188.0" GridPane.columnIndex="2" />
                </children>
             </GridPane>
             <FontAwesomeIconView fx:id="editPathBtn" fill="#00000076" glyphName="PENCIL_SQUARE_ALT" onMouseReleased="#handleDirectoryChoose" size="30" textAlignment="CENTER" wrappingWidth="61.071428298950195" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -293,7 +196,23 @@
             <FontAwesomeIconView fill="#048708b2" glyphName="CHECK" size="20" />
          </graphic>
       </Label>
-      <Label fx:id="errorLabel" layoutX="270.0" layoutY="619.0" prefHeight="29.0" prefWidth="718.0" text="  Не получилось! Исходный файл с ошибками, попробуйте другой!" textFill="#ba1506c4" visible="false">
+      <Label fx:id="encodingFailMessage" layoutX="270.0" layoutY="619.0" prefHeight="29.0" prefWidth="718.0" text="  Не получилось! Исходный файл с ошибками, попробуйте другой!" textFill="#ba1506c4" visible="false">
+         <font>
+            <Font name="Open Sans SemiBold" size="20.0" />
+         </font>
+         <graphic>
+            <FontAwesomeIconView fill="#ba1506b2" glyphName="EXCLAMATION_TRIANGLE" size="20" />
+         </graphic>
+      </Label>
+      <Label fx:id="badFileNameMessage" layoutX="270.0" layoutY="619.0" prefHeight="29.0" prefWidth="718.0" text="  Имя файла не должно содержать символы: \/:*&quot;&lt;&gt;|," textFill="#ba1506c4" visible="false">
+         <font>
+            <Font name="Open Sans SemiBold" size="20.0" />
+         </font>
+         <graphic>
+            <FontAwesomeIconView fill="#ba1506b2" glyphName="EXCLAMATION_TRIANGLE" size="20" />
+         </graphic>
+      </Label>
+      <Label fx:id="wavOnlyMessage" layoutX="270.0" layoutY="619.0" prefHeight="29.0" prefWidth="718.0" text="  Поддерживаются только файлы в формате *.wav" textFill="#ba1506c4" visible="false">
          <font>
             <Font name="Open Sans SemiBold" size="20.0" />
          </font>

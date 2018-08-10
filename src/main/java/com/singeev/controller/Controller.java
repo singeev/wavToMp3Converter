@@ -107,11 +107,18 @@ public class Controller implements Initializable {
     private Label successLabel;
 
     @FXML
-    private Label errorLabel;
+    private Label encodingFailMessage;
+
+    @FXML
+    private Label badFileNameMessage;
+
+    @FXML
+    private Label wavOnlyMessage;
 
     private ConvertService service = new ConvertService();
 
     public void initialize(URL location, ResourceBundle resources) {
+//        startEncodingBtn.
         bitrateComboBox.setItems(Constants.BIT_RATES);
         bitrateComboBox.getSelectionModel().select("64 kbps");
         bitrateComboBox.setDisable(true);
@@ -143,8 +150,8 @@ public class Controller implements Initializable {
                 findFileBtn.setVisible(false);
                 ddIcon.setVisible(true);
             } else {
-                errorLabel.setText("   Поддерживаются только файлы в формате *.wav");
-                errorLabel.setVisible(true);
+                hideAnyMessages();
+                wavOnlyMessage.setVisible(true);
             }
         }
     }
@@ -158,8 +165,8 @@ public class Controller implements Initializable {
             findFileBtn.setVisible(true);
             ddIcon.setVisible(false);
         }
-        if(errorLabel.isVisible()) {
-            errorLabel.setVisible(false);
+        if(wavOnlyMessage.isVisible()) {
+            wavOnlyMessage.setVisible(false);
         }
     }
 
@@ -282,11 +289,8 @@ public class Controller implements Initializable {
         String finalNewFileName;
         String newFileName = newFileNameField.getText().trim();
         if (StringUtils.containsAny(newFileName, Constants.RESTRICTED_FILENAME_SYMBOLS)) {
-            if(successLabel.isVisible()) {
-                successLabel.setVisible(false);
-            }
-            errorLabel.setText("  Имя файла не должно содержать символы: " + Constants.RESTRICTED_FILENAME_SYMBOLS);
-            errorLabel.setVisible(true);
+            hideAnyMessages();
+            badFileNameMessage.setVisible(true);
             startEncodingBtn.setDisable(true);
         } else {
             finalNewFileName = newFileName.endsWith(".mp3") ? newFileName : newFileName + ".mp3";
@@ -295,8 +299,8 @@ public class Controller implements Initializable {
             newFileNameField.setDisable(true);
             finishEditFilenameBtn.setVisible(false);
             fileNameEditBtn.setVisible(true);
-            if(errorLabel.isVisible()) {
-                errorLabel.setVisible(false);
+            if(badFileNameMessage.isVisible()) {
+                badFileNameMessage.setVisible(false);
                 startEncodingBtn.setDisable(false);
             }
         }
@@ -333,8 +337,23 @@ public class Controller implements Initializable {
             startEncodingBtn.setDisable(false);
             service.deleteSourceFileIfNeeded();
             successLabel.setVisible(true);
-            errorLabel.setText("  Не получилось! Исходный файл с ошибками, попробуйте другой!");
+            encodingFailMessage.setVisible(true);
         };
         service.encodeFile(progressBar, processPercendLabel, onSuccessHandler, onFailHandler);
+    }
+
+    private void hideAnyMessages() {
+        if(badFileNameMessage.isVisible()) {
+            badFileNameMessage.setVisible(false);
+        }
+        if(encodingFailMessage.isVisible()) {
+            encodingFailMessage.setVisible(false);
+        }
+        if(wavOnlyMessage.isVisible()) {
+            wavOnlyMessage.setVisible(false);
+        }
+        if(successLabel.isVisible()) {
+            successLabel.setVisible(false);
+        }
     }
 }

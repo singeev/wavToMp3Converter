@@ -8,7 +8,7 @@
 
 #findFileBtn {
     -fx-font-size:17px;
-    -fx-background-color:WHITE;
+    -fx-background-color: white;
 }
 
 #findFileBtn:hover {

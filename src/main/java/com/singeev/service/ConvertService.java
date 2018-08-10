@@ -64,16 +64,16 @@ public class ConvertService {
 
     private String convertFileSize(long bytes) {
         int unit = 1024;
-        if (bytes < unit) return bytes + " б";
+        if (bytes < unit) return bytes + " b";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = ("кМГТПЕ").charAt(exp - 1) + ("");
-        return String.format("%.1f %sб", bytes / Math.pow(unit, exp), pre);
+        String pre = ("kMGTPE").charAt(exp - 1) + ("");
+        return String.format("%.1f %sb", bytes / Math.pow(unit, exp), pre);
     }
 
 
     private String convertLength(long msec) {
         Date date = new Date(msec);
-        DateFormat formatter = new SimpleDateFormat("HH ч mm мин ss сек");
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return formatter.format(date);
     }
@@ -114,7 +114,7 @@ public class ConvertService {
             Date fileCreationDate = getFileCreationDate(sourceFile);
             sourceFileNameLabel.setText(source.getName());
             sourceFileLengthLabel.setText(convertLength(sourceFileDuration));
-            sourceFileDate.setText(new SimpleDateFormat("dd.MM.yyyy в HH:mm").format(fileCreationDate));
+            sourceFileDate.setText(new SimpleDateFormat("dd.MM.yyyy, HH:mm").format(fileCreationDate));
             sourceFileSizeLabel.setText(convertFileSize(source.length()));
             if (destinationPath == null) {
                 destinationPath = getFilePath(source);
