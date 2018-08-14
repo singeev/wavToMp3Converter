@@ -12,7 +12,7 @@
     
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>singeev</name>
+        <name>Honsu</name>
     </organization>
 
     <properties>
@@ -32,7 +32,7 @@
                 </configuration>
             </plugin>
 
-            <!-- plugins to build executables -->
+             <!--plugins to build executables-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
